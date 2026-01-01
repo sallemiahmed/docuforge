@@ -1,0 +1,232 @@
+{
+  "info": {
+    "name": "DocuForge API",
+    "description": "Custom Document Generation Engine with Type-Safe Template Processing\n\nAuthor: Ahmed Sallemi | MediaTree",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://docuforge.ho.tn",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health & Info",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/health/",
+            "description": "Check if the API is running properly"
+          }
+        },
+        {
+          "name": "API Info",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/",
+            "description": "Get API information and available endpoints"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Template Rendering",
+      "item": [
+        {
+          "name": "Render Simple Template",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/render/",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"template\": \"Hello {{name}}!\",\n  \"context\": {\n    \"name\": \"John Doe\"\n  }\n}"
+            },
+            "description": "Render a simple template with variable substitution"
+          }
+        },
+        {
+          "name": "Render with List/Tuple",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/render/",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"template\": \"Your items: {{items}}\",\n  \"context\": {\n    \"items\": [\"Apple\", \"Orange\", \"Banana\"]\n  }\n}"
+            },
+            "description": "Render template with list - demonstrates type-safe handling"
+          }
+        },
+        {
+          "name": "Render with Conditionals",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/render/",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"template\": \"{% if premium %}Premium User{% else %}Free User{% endif %}\",\n  \"context\": {\n    \"premium\": true\n  }\n}"
+            },
+            "description": "Render template with conditional logic"
+          }
+        },
+        {
+          "name": "Render Complex Template",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/render/",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"template\": \"Dear {{patient_name}},\\n\\nYour appointment is on {{date}}.\\n\\n{% if has_insurance %}Insurance: {{insurance_provider}}{% else %}Please bring payment.{% endif %}\\n\\nPrescriptions: {{medications}}\",\n  \"context\": {\n    \"patient_name\": \"John Smith\",\n    \"date\": \"2024-01-15\",\n    \"has_insurance\": true,\n    \"insurance_provider\": \"BlueCross\",\n    \"medications\": [\"Aspirin\", \"Vitamin D\", \"Omega-3\"]\n  }\n}"
+            },
+            "description": "Complex template with multiple features"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Condition Testing",
+      "item": [
+        {
+          "name": "Test Simple Condition",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/test-condition/",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"condition\": \"age >= 18\",\n  \"context\": {\n    \"age\": 21\n  }\n}"
+            },
+            "description": "Test a simple comparison condition"
+          }
+        },
+        {
+          "name": "Test AND Condition",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/test-condition/",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"condition\": \"age >= 18 AND has_consent\",\n  \"context\": {\n    \"age\": 21,\n    \"has_consent\": true\n  }\n}"
+            },
+            "description": "Test AND operator"
+          }
+        },
+        {
+          "name": "Test AND/OR Precedence",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/test-condition/",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"condition\": \"A AND B OR C\",\n  \"context\": {\n    \"A\": false,\n    \"B\": true,\n    \"C\": true\n  }\n}"
+            },
+            "description": "Demonstrates correct AND/OR precedence: (A AND B) OR C = (false AND true) OR true = true"
+          }
+        },
+        {
+          "name": "Test Complex Condition",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/test-condition/",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"condition\": \"role == 'admin' OR (role == 'manager' AND department == 'sales')\",\n  \"context\": {\n    \"role\": \"manager\",\n    \"department\": \"sales\"\n  }\n}"
+            },
+            "description": "Complex role-based access control condition"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Validation",
+      "item": [
+        {
+          "name": "Validate Template",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/validate/",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"template\": \"Hello {{name}}, {% if active %}Active{% endif %}\"\n}"
+            },
+            "description": "Validate template syntax and extract variables"
+          }
+        },
+        {
+          "name": "Validate Invalid Template",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/validate/",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"template\": \"Hello {{name\"\n}"
+            },
+            "description": "Validate invalid template - should return errors"
+          }
+        }
+      ]
+    }
+  ]
+}

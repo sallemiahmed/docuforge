@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: docuforge
+    runtime: python
+    plan: free
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn docuforge.wsgi:application"
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: ".onrender.com,.ho.tn"
+      - key: PYTHON_VERSION
+        value: "3.11.6"
